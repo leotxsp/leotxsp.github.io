@@ -1,0 +1,14 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "overused-font",
+        "value": "space grotesk",
+        "createdAt": "2026-11-14T19:11:06.145Z",
+        "reason": "Intentional: Space Grotesk is the font of the user's existing TXSP design system (styles.css), kept for visual consistency across the site. Not confirmed by the user in this session."
+      }
+    ]
+  }
+}
