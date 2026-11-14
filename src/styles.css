@@ -33,11 +33,70 @@ body {
   animation: sweep 6s ease-in-out infinite;
 }
 
+::selection {
+  background: var(--color-blanc);
+  color: var(--color-noir);
+}
+
+:focus-visible {
+  outline: 1px solid currentColor;
+  outline-offset: 4px;
+}
+
+/* ---------- Motion: inversion, not fades ----------
+   The site is black against white, so motion is the two trading places.
+   Decisive in-out curve, no drift, no fade-ups on scroll. */
+
+:root {
+  --cut: cubic-bezier(0.7, 0, 0.2, 1);
+}
+
+/* Hover: a band of inverted color passes through the element, enters left, leaves right. */
+@layer components {
+  .flip {
+    position: relative;
+    isolation: isolate;
+  }
+  .flip::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: #fff;
+    mix-blend-mode: difference;
+    pointer-events: none;
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform 280ms var(--cut);
+  }
+  .flip:hover::after,
+  .flip:focus-visible::after {
+    transform: scaleX(1);
+    transform-origin: left;
+  }
+}
+
+/* Route curtain: filled by App on navigation. */
+.veil {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  pointer-events: none;
+}
+.veil > div {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  transform: scaleX(0);
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
   }
   .animate-sweep {
     animation: none;
+  }
+  .flip::after {
+    transition: none;
   }
 }

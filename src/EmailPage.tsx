@@ -72,7 +72,7 @@ export default function EmailPage() {
   return (
     <div className="min-h-screen overflow-x-hidden bg-noir text-blanc">
       <header className="flex items-center justify-between gap-4 px-6 py-5 text-[11px] tracking-[0.35em] uppercase md:px-12">
-        <a href="#/" className="inline-flex items-center gap-2 text-muted hover:text-blanc">
+        <a href="#/" className="flip -mx-2 inline-flex items-center gap-2 px-2 py-1 text-muted">
           <ArrowLeft className="h-4 w-4" /> Início
         </a>
         <span className="font-semibold">Leonardo Simplicio</span>
@@ -98,7 +98,7 @@ export default function EmailPage() {
               href={WHATSAPP}
               target="_blank"
               rel="noopener noreferrer"
-              className="mt-10 inline-flex items-center gap-2 text-sm font-semibold text-muted hover:text-blanc"
+              className="flip -mx-2 mt-8 inline-flex items-center gap-2 px-2 py-2 text-sm font-semibold text-muted"
             >
               <MessageCircle className="h-4 w-4" /> Prefere WhatsApp? Fale por lá
             </a>
@@ -143,7 +143,7 @@ export default function EmailPage() {
 
             <button
               type="submit"
-              className="inline-flex w-full items-center justify-center gap-2 bg-blanc px-6 py-4 text-sm font-semibold text-noir transition-colors hover:bg-white md:w-auto"
+              className="flip inline-flex w-full items-center justify-center gap-2 bg-blanc px-6 py-4 text-sm font-semibold text-noir md:w-auto"
             >
               <Send className="h-4 w-4" /> Preparar email
             </button>

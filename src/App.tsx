@@ -1,4 +1,5 @@
 import { useEffect, useState, type ReactNode } from "react";
+import { flushSync } from "react-dom";
 import {
   Mail,
   Briefcase,
@@ -123,11 +124,11 @@ function SubHeader({ side }: { side: "dev" | "data" }) {
   const other = side === "dev" ? { href: "#/data", label: "Data" } : { href: "#/dev", label: "Dev" };
   return (
     <header className="flex items-center justify-between gap-4 border-b border-white/10 px-6 py-5 text-[11px] tracking-[0.35em] uppercase md:px-12">
-      <a href="#/" className="inline-flex items-center gap-2 hover:text-muted">
+      <a href="#/" className="flip -mx-2 inline-flex items-center gap-2 px-2 py-1">
         <ArrowLeft className="h-4 w-4" /> Início
       </a>
       <span className="font-semibold">{PROFILE.name}</span>
-      <a href={other.href} className="text-muted hover:text-blanc">
+      <a href={other.href} className="flip -mx-2 px-2 py-1 text-muted">
         {other.label} →
       </a>
     </header>
@@ -192,7 +193,7 @@ function ProjectGrid({ projects }: { projects: Project[] }) {
                 href={p.repo}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="mt-8 inline-flex items-center gap-2 text-sm font-semibold underline underline-offset-4 hover:text-muted"
+                className="flip -mx-2 mt-6 inline-flex items-center gap-2 self-start px-2 py-2 text-sm font-semibold underline underline-offset-4"
               >
                 Ver código <ArrowUpRight className="h-4 w-4" />
               </a>
@@ -290,13 +291,13 @@ function DataPage() {
                 href={b.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group flex h-full items-center justify-between gap-3 border border-white/15 p-4 transition-colors hover:border-blanc"
+                className="flip group flex h-full items-center justify-between gap-3 border border-white/15 p-4"
               >
                 <div>
                   <p className="text-sm font-semibold leading-snug">{b.title}</p>
                   <p className="mt-1 text-[10px] tracking-[0.25em] text-muted uppercase">{b.issuer}</p>
                 </div>
-                <ArrowUpRight className="h-4 w-4 shrink-0 text-muted transition-colors group-hover:text-blanc" />
+                <ArrowUpRight className="h-4 w-4 shrink-0 text-muted" />
               </a>
             </li>
           ))}
@@ -369,7 +370,7 @@ function Contact() {
                 href={l.href}
                 target={l.href.startsWith("mailto:") ? undefined : "_blank"}
                 rel="noopener noreferrer"
-                className="group flex items-center justify-between gap-4 p-8 transition-colors hover:bg-noir-2"
+                className="flip group flex items-center justify-between gap-4 p-8"
               >
                 <div className="flex items-center gap-5">
                   <Icon className="h-6 w-6" strokeWidth={1.5} />
@@ -378,7 +379,7 @@ function Contact() {
                     <p className="mt-1 text-lg font-semibold break-all">{l.value}</p>
                   </div>
                 </div>
-                <ArrowUpRight className="h-5 w-5 text-muted transition-colors group-hover:text-blanc" />
+                <ArrowUpRight className="h-5 w-5 text-muted" />
               </a>
             </li>
           );
@@ -407,14 +408,62 @@ function WhatsAppButton() {
   );
 }
 
+// Route curtain: the destination's color covers the screen, the page swaps underneath, the color pulls away.
+// Dev (and email) arrive in black from the left, Data in white from the right; Home closes both halves
+// into the split, which is exactly what the home page looks like, so it simply lifts.
+const CUT = "cubic-bezier(0.7, 0, 0.2, 1)";
+let busy = false;
+
+function curtain(route: string, swap: () => void) {
+  const veil = document.getElementById("veil");
+  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if (!veil || reduce || busy || !veil.animate) return swap();
+  busy = true;
+  const [black, white] = Array.from(veil.children) as HTMLElement[];
+  const home = route === "";
+  const toData = route === "data";
+  const place = (el: HTMLElement, left: string, width: string) => Object.assign(el.style, { left, width });
+  place(black, "0", home ? "50%" : toData ? "0" : "100%");
+  place(white, home ? "50%" : "0", home ? "50%" : toData ? "100%" : "0");
+
+  const slide = (el: HTMLElement, origin: "left" | "right", from: number, to: number, duration: number) => {
+    el.style.transformOrigin = origin;
+    return el.animate([{ transform: `scaleX(${from})` }, { transform: `scaleX(${to})` }], {
+      duration,
+      easing: CUT,
+      fill: "forwards",
+    });
+  };
+  const clear = () => [black, white].forEach((el) => el.getAnimations().forEach((a) => a.cancel()));
+
+  slide(black, "left", 0, 1, 420);
+  slide(white, "right", 0, 1, 420)
+    .finished.then(() => {
+      swap();
+      // Home is already a black/white split: the closed curtain is the page, so it just lifts.
+      if (home) return;
+      // Each color keeps travelling the way it came in.
+      const a = slide(black, "right", 1, 0, 480);
+      const b = slide(white, "left", 1, 0, 480);
+      return Promise.all([a.finished, b.finished]);
+    })
+    .finally(() => {
+      clear();
+      busy = false;
+    });
+}
+
 // Hash routing (#/, #/dev, #/data): GitHub Pages serves only the root, so path routes would 404 on reload.
 function useHashRoute() {
   const read = () => window.location.hash.replace(/^#\/?/, "");
   const [route, setRoute] = useState(read);
   useEffect(() => {
     const onChange = () => {
-      setRoute(read());
-      window.scrollTo(0, 0);
+      const next = read();
+      curtain(next, () => {
+        flushSync(() => setRoute(read())); // read now: a later click may have changed it
+        window.scrollTo(0, 0);
+      });
     };
     window.addEventListener("hashchange", onChange);
     return () => window.removeEventListener("hashchange", onChange);
@@ -437,6 +486,10 @@ export default function App() {
         © {new Date().getFullYear()} {PROFILE.name} — Developer | Data Scientist
       </footer>
       <WhatsAppButton />
+      <div id="veil" className="veil" aria-hidden="true">
+        <div className="bg-noir" />
+        <div className="bg-blanc" />
+      </div>
     </main>
   );
 }

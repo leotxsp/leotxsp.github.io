@@ -47,7 +47,7 @@ const TOP_BAR = (
     <a
       href="./ltsdados/"
       aria-label="Ir para LTS Dados"
-      className="pointer-events-auto absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 border border-current px-4 py-2 text-[11px] tracking-[0.35em] transition-colors hover:bg-white hover:text-black"
+      className="flip pointer-events-auto absolute top-1/2 right-6 -translate-y-1/2 border border-current px-4 py-2 text-[11px] tracking-[0.35em] md:right-auto md:left-1/2 md:-translate-x-1/2"
     >
       LTS DADOS
     </a>
@@ -64,26 +64,66 @@ export default function SplitHero() {
   );
 }
 
+// The white side slides in from the right edge only on the first visit of the session.
+let introPlayed = false;
+
+function easeOutExpo(t: number) {
+  return t >= 1 ? 1 : 1 - Math.pow(2, -10 * t);
+}
+
 function DesktopSplit() {
-  const [split, setSplit] = useState(50);
-  const [hovered, setHovered] = useState<Side | null>(null);
+  const [intro] = useState(
+    () => !introPlayed && !window.matchMedia("(prefers-reduced-motion: reduce)").matches,
+  );
+  const [split, setSplit] = useState(intro ? 100 : 50);
+  const [hovered, setHoveredState] = useState<Side | null>(null);
+  const [settling, setSettling] = useState(false);
   const hoveredRef = useRef<Side | null>(null);
+  const settleTimer = useRef(0);
+
+  // Leaving a side eases back into the sweep instead of snapping.
+  const setHovered = (side: Side | null) => {
+    setHoveredState(side);
+    window.clearTimeout(settleTimer.current);
+    if (side === null) {
+      setSettling(true);
+      settleTimer.current = window.setTimeout(() => setSettling(false), 700);
+    }
+  };
+  useEffect(() => () => window.clearTimeout(settleTimer.current), []);
 
   useEffect(() => {
     hoveredRef.current = hovered;
   }, [hovered]);
 
   useEffect(() => {
+    introPlayed = true;
+    // Reduced motion: hold the split at 50/50; hover still works.
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     const DURATION = 4200; // ms per half-cycle
+    const INTRO = 1300;
     let raf = 0;
     let start: number | null = null;
+    let introStart: number | null = intro ? null : -1;
     const tick = (ts: number) => {
+      // Entrance: the white half travels in from the right edge to the middle.
+      if (introStart !== -1) {
+        if (introStart === null) introStart = ts;
+        const t = (ts - introStart) / INTRO;
+        if (t < 1) {
+          setSplit(100 - 50 * easeOutExpo(t));
+          raf = requestAnimationFrame(tick);
+          return;
+        }
+        introStart = -1;
+      }
       if (hoveredRef.current) {
         start = null;
         raf = requestAnimationFrame(tick);
         return;
       }
-      if (start === null) start = ts;
+      // Phase 0.5 is the 50% mark, so the sweep picks up where the split is (no jump).
+      if (start === null) start = ts - DURATION / 2;
       const phase = ((ts - start) % (DURATION * 2)) / DURATION; // 0..2
       const t = phase < 1 ? easeInOut(phase) : easeInOut(2 - phase);
       setSplit(15 + t * 70); // sweep between 15% and 85%
@@ -95,7 +135,7 @@ function DesktopSplit() {
 
   // hovering freezes the split so the hovered side takes ~75% of the screen
   const pos = hovered === "dev" ? 75 : hovered === "data" ? 25 : split;
-  const animate = hovered ? "clip-path 700ms cubic-bezier(0.22, 1, 0.36, 1)" : "none";
+  const animate = hovered || settling ? "clip-path 700ms cubic-bezier(0.22, 1, 0.36, 1)" : "none";
 
   return (
     <section className="relative hidden h-screen w-full overflow-hidden select-none md:block">
@@ -135,7 +175,9 @@ function DesktopSplit() {
         style={{ left: `${pos}%`, transition: animate.replace("clip-path", "left") }}
       >
         <div className="grid h-12 w-12 place-items-center border border-white/30 bg-black/40 font-semibold text-[10px] tracking-[0.3em] text-white backdrop-blur-sm">
-          L<span className="mx-0.5 opacity-40">/</span>S
+          <span>
+            L<span className="mx-0.5 opacity-40">/</span>S
+          </span>
         </div>
       </div>
 
