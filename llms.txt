@@ -1,0 +1,29 @@
+# Leonardo Simplicio
+
+> Portfólio de Leonardo Simplicio, desenvolvedor e cientista de dados no Brasil. Estudante de ciência da computação, com projetos em Python, Java, React, AWS, machine learning e automação de dados. O site também apresenta a LTS Dados, serviço de preenchimento de dados, automação de planilhas e visibilidade de empresas nas respostas de IA.
+
+## Páginas principais
+
+- [Início](https://leonardosimplicio.com/): portfólio com as áreas Dev (projetos e stack de desenvolvimento) e Data (ciência de dados, machine learning e certificações).
+- [LTS Dados](https://leonardosimplicio.com/ltsdados/): serviços de preenchimento de dados (notas fiscais, planilhas e cadastros), automação de planilhas e visibilidade na IA.
+- [Visibilidade na IA](https://leonardosimplicio.com/ltsdados/landing/): explica por que uma empresa pode não aparecer nas respostas de IA, as três causas comuns e como a verificação funciona.
+
+## Projetos
+
+- XML Handler: ferramenta em Python que lê XMLs de notas fiscais e exibe em tabela PyQt. Código: https://github.com/leotxsp/XMLHandler
+- Deep Audio Classifier: projeto de IA que classifica sons, com TensorFlow, para reconhecer cantos de pássaros. Código: https://github.com/leotxsp/Ai-Para-reconhecimento-de-som-Deep-Audio-Classifier-
+- Em andamento: transformar o XML Handler em uma API em Java, com API RESTful.
+
+## Certificações
+
+- AWS Certified Cloud Practitioner
+- AWS re/Start Graduate
+- Curso de Programador de Sistemas (Senac)
+- Programa Oracle Next Education F2 T5 Back-end
+- Ciência da Computação, cursando (Estácio)
+
+## Contato
+
+- LinkedIn: https://www.linkedin.com/in/leonardosimplicio/
+- GitHub: https://github.com/leotxsp
+- Formulário de email: https://leonardosimplicio.com/#/email
