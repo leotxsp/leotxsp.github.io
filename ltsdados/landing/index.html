@@ -26,20 +26,18 @@
       }
     </script>
   </head>
-  <body>
+  <body class="landing">
     <div class="wrap">
       <header class="top">
         <a class="brand" href="../">← LTS Dados</a>
         <nav>
           <a href="#causas">Por que acontece</a>
-          <a href="#frentes">Como funciona</a>
-          <a href="#verificacao">Verificação</a>
+          <a href="#verificacao">Pedir verificação</a>
         </nav>
       </header>
 
       <!-- Hero -->
       <section class="hero">
-        <p class="label">Visibilidade na IA</p>
         <h1>
           Sua empresa é encontrada<br />
           <span class="muted">pela IA?</span>
@@ -48,9 +46,10 @@
           Cada vez mais gente pergunta à IA antes de procurar um serviço. Ela responde com os nomes que estão prontos
           para serem encontrados. Se a sua marca não aparece, o cliente nem chega até você.
         </p>
-        <div class="btns">
-          <a class="btn btn-primary" href="https://wa.me/559193326166?text=Ol%C3%A1!%20Quero%20verificar%20se%20a%20minha%20empresa%20%C3%A9%20encontrada%20pela%20IA." target="_blank" rel="noopener noreferrer">Verificar se a minha empresa é encontrada</a>
+        <div class="btns" id="hero-cta">
+          <a class="btn btn-primary" href="https://wa.me/559193326166?text=Ol%C3%A1!%20Quero%20verificar%20se%20a%20minha%20empresa%20%C3%A9%20encontrada%20pela%20IA." target="_blank" rel="noopener noreferrer"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/></svg>Pedir a verificação no WhatsApp</a>
         </div>
+        <p class="cta-note">Abre uma conversa comigo no WhatsApp. Você recebe prints do que a IA responde sobre o seu negócio e o que precisa ajustar.</p>
       </section>
 
       <!-- Problema -->
@@ -70,7 +69,6 @@
             <div class="foot">Exemplo ilustrativo. Clínicas A, B e C são nomes genéricos.</div>
           </div>
           <div>
-            <p class="label">O problema</p>
             <h2 style="margin-bottom:24px">Se a IA não te encontra, ela não te indica.</h2>
             <p class="lead" style="margin-top:0">
               Quem pergunta à IA recebe poucos nomes. Se o seu não está entre eles, a conversa segue sem você.
@@ -96,82 +94,88 @@
         <p class="disclaimer">Os números mostram o uso geral da IA, não garantem resultado para o seu negócio.</p>
       </section>
 
-      <!-- Causas -->
+      <!-- Causas e o que eu faço: antes -> depois, uma linha por causa -->
       <section id="causas">
-        <p class="label">Por que acontece</p>
-        <h2>Por que a IA não te indica?</h2>
-        <div class="grid three">
-          <article class="card">
-            <p class="n">01</p>
-            <h3>Perfil vazio</h3>
-            <p>As informações básicas da sua empresa (nome, serviços, horário, endereço) estão incompletas nas plataformas de onde a IA tira dados.</p>
+        <h2>Por que a IA não te indica, <span class="muted">e o que eu faço.</span></h2>
+        <div class="fix-rows">
+          <article class="fix-row" data-row="1">
+            <div class="cause">
+              <h3>Perfil vazio</h3>
+              <p>As informações básicas da sua empresa (nome, serviços, horário, endereço) estão incompletas nas plataformas de onde a IA tira dados, como o Perfil da Empresa no Google e as redes sociais.</p>
+            </div>
+            <div class="glyph g-perfil" aria-hidden="true"><span>Nome</span><b class="f"><i style="--w:.55"></i></b><span>Horário</span><b class="f"><i style="--w:.38"></i></b><span>Endereço</span><b class="f"><i style="--w:.8"></i></b></div>
+            <div class="fix">
+              <h3>Eu preencho o perfil</h3>
+              <p>Preencho e organizo o seu perfil nessas plataformas, para que a IA encontre a sua marca com as informações certas.</p>
+            </div>
           </article>
-          <article class="card">
-            <p class="n">02</p>
-            <h3>Dados desencontrados</h3>
-            <p>Endereço e telefone diferentes entre o site, o Google e as redes. Quando a informação não bate, a IA não confia nela.</p>
+          <article class="fix-row" data-row="2">
+            <div class="cause">
+              <h3>Dados desencontrados</h3>
+              <p>Endereço e telefone diferentes entre o site, o Google e as redes. Quando a informação não bate, a IA não confia nela.</p>
+            </div>
+            <div class="glyph g-dados" aria-hidden="true"><span>Site</span><b class="f"><i style="--w:.7"></i></b><span>Google</span><b class="f"><i style="--w:.7"></i></b><span>Redes</span><b class="f"><i style="--w:.7"></i></b></div>
+            <div class="fix">
+              <h3>Eu alinho os dados</h3>
+              <p>Deixo nome, endereço e telefone iguais em todos os lugares em que a sua empresa aparece.</p>
+            </div>
           </article>
-          <article class="card">
-            <p class="n">03</p>
-            <h3>Pouco conteúdo</h3>
-            <p>O site diz pouco sobre o que você faz e para quem. Sem texto claro, a IA não tem o que citar.</p>
-          </article>
-        </div>
-      </section>
-
-      <!-- Frentes -->
-      <section id="frentes">
-        <p class="label">Como funciona</p>
-        <h2>Uma frente para cada causa.</h2>
-        <div class="grid three">
-          <article class="card">
-            <p class="n">01</p>
-            <h3>Perfil</h3>
-            <p>Preencho e organizo o seu perfil nas plataformas que a IA consulta, para que ela encontre a sua marca com as informações certas.</p>
-          </article>
-          <article class="card">
-            <p class="n">02</p>
-            <h3>Dados</h3>
-            <p>Alinho nome, endereço e telefone em todos os lugares em que sua empresa aparece, para que a informação seja a mesma em todo lugar.</p>
-          </article>
-          <article class="card">
-            <p class="n">03</p>
-            <h3>Conteúdo</h3>
-            <p>Escrevo as páginas que explicam o seu serviço com clareza, para que a IA tenha uma descrição fiel do que você oferece.</p>
+          <article class="fix-row" data-row="3">
+            <div class="cause">
+              <h3>Pouco conteúdo</h3>
+              <p>O site diz pouco sobre o que você faz e para quem. Sem texto claro, a IA não tem o que citar.</p>
+            </div>
+            <div class="glyph g-conteudo" aria-hidden="true"><b class="l"><i style="--w:.94"></i></b><b class="l"><i style="--w:.86"></i></b><b class="l"><i style="--w:.97"></i></b><b class="l"><i style="--w:.58"></i></b></div>
+            <div class="fix">
+              <h3>Eu escrevo o conteúdo</h3>
+              <p>Escrevo as páginas que explicam o seu serviço com clareza, para que a IA tenha uma descrição fiel do que você oferece.</p>
+            </div>
           </article>
         </div>
         <p class="disclaimer">Não há garantia de posição nas respostas da IA. O trabalho deixa a sua marca pronta para ser encontrada.</p>
+        <div class="btns">
+          <a class="btn btn-primary" href="https://wa.me/559193326166?text=Ol%C3%A1!%20Quero%20verificar%20se%20a%20minha%20empresa%20%C3%A9%20encontrada%20pela%20IA." target="_blank" rel="noopener noreferrer"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/></svg>Pedir a verificação no WhatsApp</a>
+        </div>
       </section>
 
       <!-- Businesses in ChatGPT -->
-      <section>
-        <p class="label">Novidade</p>
-        <h2>Businesses in ChatGPT</h2>
-        <div class="split">
-          <p class="lead" style="margin-top:0">
-            A OpenAI lançou o Businesses in ChatGPT, em que empresas podem reivindicar o próprio perfil no ChatGPT e ver
-            menções, cliques e visitas.
-          </p>
-          <p class="lead" style="margin-top:0">
-            Eu ajudo a sua marca a estar pronta para aparecer nas respostas. Não prometo posição específica: a IA decide as
-            respostas, e o que eu faço é deixar a sua marca clara e consistente para ela.
-          </p>
-        </div>
+      <section class="note">
+        <h2>Empresas agora têm perfil no ChatGPT.</h2>
+        <p class="lead" style="margin-top:0">
+          A OpenAI lançou o Businesses in ChatGPT: empresas podem reivindicar o próprio perfil e ver menções, cliques e
+          visitas. Eu deixo a sua marca clara e consistente para aparecer nas respostas.
+        </p>
         <p class="disclaimer">Fonte: OpenAI, "Introducing Businesses in ChatGPT" (nov 2026); Digiday, 9 nov 2026.</p>
       </section>
 
       <!-- Verificação (CTA) -->
       <section id="verificacao" class="cta">
-        <p class="label">Verificação</p>
         <h2>Descubra se a IA encontra <span class="muted">a sua empresa.</span></h2>
         <p>
           Eu faço a verificação e te mostro o que a IA encontra sobre o seu negócio, e o que precisa ser ajustado.
         </p>
+        <figure class="record">
+          <figcaption>O que a IA lê depois do ajuste</figcaption>
+          <pre class="ascii">nome ........ Sua marca
+serviço ..... dentista
+bairro ...... Umarizal, Belém
+horário ..... seg–sex, 8h às 18h
+telefone .... (91) 0000-0000
+site ........ suamarca.com.br
+status ...... <b>pronta para ser encontrada</b></pre>
+          <p class="foot">Exemplo ilustrativo.</p>
+        </figure>
         <div class="btns">
-          <a class="btn btn-primary" href="https://wa.me/559193326166?text=Ol%C3%A1!%20Quero%20verificar%20se%20a%20minha%20empresa%20%C3%A9%20encontrada%20pela%20IA." target="_blank" rel="noopener noreferrer">Verificar se a minha empresa é encontrada</a>
+          <a class="btn btn-primary" href="https://wa.me/559193326166?text=Ol%C3%A1!%20Quero%20verificar%20se%20a%20minha%20empresa%20%C3%A9%20encontrada%20pela%20IA." target="_blank" rel="noopener noreferrer"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/></svg>Pedir a verificação no WhatsApp</a>
           <a class="btn btn-ghost" href="../../#/email">Enviar email</a>
         </div>
+        <p class="cta-note">Leonardo Simplicio · LTS Dados. A verificação é feita por mim, pessoalmente.</p>
       </section>
+    </div>
+
+    <!-- Mobile: the action stays in reach once the hero button scrolls away -->
+    <div class="dock" hidden>
+      <a class="btn btn-primary" href="https://wa.me/559193326166?text=Ol%C3%A1!%20Quero%20verificar%20se%20a%20minha%20empresa%20%C3%A9%20encontrada%20pela%20IA." target="_blank" rel="noopener noreferrer"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/></svg>Pedir a verificação no WhatsApp</a>
     </div>
 
     <footer>
@@ -181,5 +185,8 @@
         <p>Os exemplos com nomes genéricos e números ilustrativos não representam empresas reais.</p>
       </div>
     </footer>
+    <script src="../motion.js"></script>
+    <script src="../sheet.js"></script>
+    <script src="../ascii.js"></script>
   </body>
 </html>

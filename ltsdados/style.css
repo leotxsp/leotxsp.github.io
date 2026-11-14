@@ -4,6 +4,7 @@
   --blanc: #f5f5f3;
   --muted: #8a8a8a;
   --line: rgba(255, 255, 255, 0.1);
+  --cut: cubic-bezier(0.7, 0, 0.2, 1);
 }
 * { box-sizing: border-box; }
 html, body { margin: 0; }
@@ -23,7 +24,6 @@ header.top {
 }
 header.top nav { display: flex; flex-wrap: wrap; gap: 24px; }
 header.top nav a { text-decoration: none; color: var(--muted); }
-header.top nav a:hover { color: var(--blanc); }
 .brand { font-weight: 600; text-decoration: none; }
 .label { font-size: 12px; letter-spacing: 0.4em; text-transform: uppercase; color: var(--muted); margin: 0; }
 h1 { font-size: clamp(44px, 9vw, 96px); line-height: 0.95; letter-spacing: -0.02em; margin: 24px 0 0; font-weight: 700; }
@@ -34,12 +34,10 @@ h3 { font-size: 24px; margin: 24px 0 12px; font-weight: 700; }
 .btns { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 40px; }
 .btn {
   display: inline-flex; align-items: center; gap: 8px; padding: 14px 24px;
-  font-weight: 600; font-size: 15px; text-decoration: none; transition: background 0.2s, border-color 0.2s;
+  font-weight: 600; font-size: 15px; text-decoration: none;
 }
 .btn-primary { background: var(--blanc); color: var(--noir); }
-.btn-primary:hover { background: #fff; }
 .btn-ghost { border: 1px solid rgba(255, 255, 255, 0.3); }
-.btn-ghost:hover { border-color: var(--blanc); }
 section { border-top: 1px solid var(--line); padding: 96px 0; }
 .hero { border-top: none; padding-top: 48px; }
 .grid { display: grid; gap: 1px; background: var(--line); }
@@ -75,3 +73,193 @@ section { border-top: 1px solid var(--line); padding: 96px 0; }
 .disclaimer { font-size: 14px; color: var(--muted); margin-top: 24px; line-height: 1.6; }
 footer { border-top: 1px solid var(--line); padding: 32px 0; text-align: center; font-size: 13px; line-height: 1.6; color: var(--muted); }
 footer p { margin: 6px 0; }
+
+::selection { background: var(--blanc); color: var(--noir); }
+:focus-visible { outline: 1px solid currentColor; outline-offset: 4px; }
+
+/* ---------- Motion: inversion, not fades ---------- */
+/* Hover: a band of inverted color passes through the control, in from the left, out to the right. */
+.btn, header.top nav a { position: relative; isolation: isolate; }
+header.top nav a { margin: -4px -8px; padding: 4px 8px; }
+.btn::after, header.top nav a::after {
+  content: ""; position: absolute; inset: 0; background: #fff; mix-blend-mode: difference;
+  pointer-events: none; transform: scaleX(0); transform-origin: right; transition: transform 280ms var(--cut);
+}
+.btn:hover::after, .btn:focus-visible::after,
+header.top nav a:hover::after, header.top nav a:focus-visible::after { transform: scaleX(1); transform-origin: left; }
+
+/* Chat demo (motion.js): the question types, names land with an inverted flash,
+   a hairline searches the empty row and "não apareceu" is stamped. Loops while visible. */
+.chat.live { width: 100%; }
+.chat.live .q { min-height: 1.2em; line-height: 1.2; }
+.chat.live .q.typing::after,
+.chat.live .q.thinking::after {
+  content: ""; display: inline-block; width: 0.45em; height: 1em; margin-left: 4px;
+  vertical-align: -0.12em; background: currentColor;
+}
+.chat.live .q.thinking::after { animation: caret 0.9s steps(1) infinite; }
+.chat.live li { position: relative; visibility: hidden; transition: background 600ms var(--cut), color 600ms var(--cut); }
+.chat.live li.on { visibility: visible; }
+.chat.live li.flash { background: var(--blanc); color: var(--noir); transition: none; }
+.chat.live li.miss { overflow: hidden; }
+.chat.live li.miss span { visibility: hidden; padding: 4px 8px; margin: -4px -8px; }
+.chat.live li.miss.searching::after {
+  content: ""; position: absolute; top: 0; bottom: 0; left: 0; width: 1px; background: var(--blanc);
+  animation: search 1100ms var(--cut) both;
+}
+.chat.live li.miss.stamped span {
+  visibility: visible; background: var(--blanc); color: var(--noir);
+  animation: blink 0.36s steps(1) 2;
+}
+.chat.live.clearing li { visibility: hidden; }
+@keyframes search { from { left: 0; } to { left: 100%; } }
+@keyframes caret { 50% { opacity: 0; } }
+@keyframes blink { 50% { opacity: 0; } }
+@media (max-width: 520px) { .chat.live .q { min-height: 2.4em; } }
+
+/* Hero background: a self-filling spreadsheet (sheet.js), full-bleed, faded under the copy. */
+.hero { isolation: isolate; }
+.hero > * { position: relative; z-index: 1; }
+.hero > canvas.sheet {
+  position: absolute; z-index: 0; top: 0; left: 50%; width: 100vw; height: 100%;
+  transform: translateX(-50%); pointer-events: none;
+  -webkit-mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.8), #000 50%, transparent),
+    linear-gradient(to right, rgba(0, 0, 0, 0.18), rgba(0, 0, 0, 0.18) 45%, #000 75%);
+  -webkit-mask-composite: source-in;
+  mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.8), #000 50%, transparent),
+    linear-gradient(to right, rgba(0, 0, 0, 0.18), rgba(0, 0, 0, 0.18) 45%, #000 75%);
+  mask-composite: intersect;
+}
+@media (max-width: 900px) {
+  .hero > canvas.sheet {
+    -webkit-mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.35), rgba(0, 0, 0, 0.35) 55%, transparent);
+    mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.35), rgba(0, 0, 0, 0.35) 55%, transparent);
+  }
+}
+
+/* ---------- Causes -> fixes (landing): one row per cause, the diagram goes from broken to fixed ---------- */
+.fix-rows { border-top: 1px solid var(--line); margin-top: 8px; }
+.fix-row { display: grid; gap: 20px 40px; align-items: center; padding: 36px 0; border-bottom: 1px solid var(--line); }
+@media (min-width: 900px) { .fix-row { grid-template-columns: 1fr 240px 1fr; } }
+.fix-row h3 { margin: 0 0 10px; font-size: 22px; }
+.fix-row .cause h3 { color: var(--muted); }
+.fix-row p { margin: 0; line-height: 1.6; color: rgba(245, 245, 243, 0.7); }
+
+.glyph {
+  position: relative; display: grid; grid-template-columns: 64px 1fr; align-items: center; gap: 7px 12px;
+  height: 72px; align-content: center;
+  font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted);
+}
+.glyph .f { position: relative; height: 16px; border: 1px solid rgba(255, 255, 255, 0.18); }
+.glyph .f i, .glyph .l i {
+  position: absolute; left: 5px; top: 5px; height: 4px; width: calc((100% - 10px) * var(--w));
+  background: rgba(245, 245, 243, 0.75); transform-origin: left;
+}
+.glyph.g-conteudo { grid-template-columns: 1fr; gap: 10px; }
+.glyph .l { position: relative; height: 4px; display: block; }
+.glyph .l i { left: 0; top: 0; width: calc(100% * var(--w)); }
+.glyph.g-dados::after {
+  content: ""; position: absolute; top: 2px; bottom: 2px; width: 1px; background: var(--blanc);
+  left: calc(64px + 12px + 5px + (100% - 64px - 12px - 10px) * 0.7);
+}
+
+/* Before (motion only): the cause, drawn. */
+.motion .fix-row:not(.fixed) .glyph .f { border-style: dashed; }
+.motion .fix-row:not(.fixed) .g-perfil i { transform: scaleX(0); }
+.motion .fix-row:not(.fixed) .g-dados i { transform: scaleX(var(--j, 1)); }
+.motion .fix-row:not(.fixed) .g-dados::after { opacity: 0; }
+.motion .fix-row:not(.fixed) .g-conteudo b:first-child i { transform: scaleX(0.3); }
+.motion .fix-row:not(.fixed) .g-conteudo b:not(:first-child) i { transform: scaleX(0); }
+.motion .fix-row:not(.fixed) .g-perfil b:first-of-type::after,
+.motion .fix-row:not(.fixed) .g-conteudo b:first-child::after {
+  content: ""; position: absolute; top: 3px; left: 5px; width: 1px; height: 8px; background: var(--blanc);
+  animation: caret 1s steps(1) infinite;
+}
+.motion .fix-row:not(.fixed) .g-conteudo b:first-child::after { top: -2px; left: calc(28% + 4px); }
+/* After: the fix plays once. */
+.motion .fix-row.fixed .g-perfil i { animation: type-in 700ms steps(7, end) both; }
+.motion .fix-row.fixed .g-perfil b:nth-of-type(2) i { animation-delay: 450ms; }
+.motion .fix-row.fixed .g-perfil b:nth-of-type(3) i { animation-delay: 900ms; }
+.motion .fix-row.fixed .g-dados i { transition: transform 800ms var(--cut); }
+.motion .fix-row.fixed .g-dados::after { animation: fade 300ms ease 800ms both; }
+.motion .fix-row.fixed .g-conteudo i { animation: type-in 520ms steps(8, end) both; }
+.motion .fix-row.fixed .g-conteudo b:nth-child(2) i { animation-delay: 520ms; }
+.motion .fix-row.fixed .g-conteudo b:nth-child(3) i { animation-delay: 1040ms; }
+.motion .fix-row.fixed .g-conteudo b:nth-child(4) i { animation-delay: 1560ms; }
+.motion .fix-row .cause h3, .motion .fix-row .fix h3 { transition: color 400ms var(--cut); }
+.motion .fix-row:not(.fixed) .fix h3 { color: var(--muted); }
+@keyframes type-in { from { transform: scaleX(0); } }
+@keyframes fade { from { opacity: 0; } }
+
+/* CTA clarity */
+.btn .ico { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.75; stroke-linejoin: round; flex: none; }
+.cta-note { font-size: 14px; line-height: 1.6; color: var(--muted); max-width: 520px; margin: 16px 0 0; }
+.cta .cta-note { margin: 16px auto 0; }
+
+/* Mobile dock: the action stays within thumb reach (motion.js shows it after the hero button leaves). */
+.dock {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 20;
+  padding: 10px 16px calc(10px + env(safe-area-inset-bottom));
+  background: rgba(10, 10, 10, 0.94); border-top: 1px solid var(--line);
+  transform: translateY(110%); transition: transform 320ms var(--cut);
+}
+.dock.on { transform: none; }
+.dock .btn { width: 100%; justify-content: center; }
+@media (min-width: 760px) { .dock { display: none !important; } }
+
+/* Typography: no stragglers, balanced headings */
+h1, h2, h3 { text-wrap: balance; }
+p { text-wrap: pretty; }
+
+@media (max-width: 600px) {
+  .btns { flex-direction: column; }
+  .btns .btn { justify-content: center; }
+  .landing header.top nav { display: none; }
+  .brand { display: inline-block; padding: 13px 0; }
+  .landing .wrap { padding-bottom: 72px; }
+}
+
+/* Stats: the sheet cursor selects each cell and the value lands with an inverted flash (motion.js). */
+.stat { position: relative; }
+.stat.sel::after { content: ""; position: absolute; inset: 0; box-shadow: inset 0 0 0 1px rgba(245, 245, 243, 0.55); pointer-events: none; }
+.motion .stat.wait .v { visibility: hidden; }
+.stat .v.flash { background: var(--blanc); color: var(--noir); box-shadow: 0 0 0 6px var(--blanc); }
+.stat .small { font-size: 14px; }
+
+/* CTA record: an ASCII field the AI "reads" into a clean business record (ascii.js). */
+.record {
+  margin: 48px auto 0; max-width: 560px; text-align: left;
+  border: 1px solid rgba(255, 255, 255, 0.15); background: var(--noir-2);
+}
+.record figcaption {
+  border-bottom: 1px solid var(--line); padding: 12px 20px; font-size: 12px;
+  letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted);
+}
+.record .ascii {
+  margin: 0; padding: 22px 20px; overflow: hidden;
+  font: 400 clamp(11.5px, 3.3vw, 15px) / 1.7 ui-monospace, "Cascadia Mono", Consolas, "Courier New", monospace;
+  color: var(--blanc); white-space: pre;
+}
+.record .ascii b { font-weight: 600; background: var(--blanc); color: var(--noir); padding: 1px 4px; margin: 0 -4px; }
+.record .foot { margin: 0; border-top: 1px solid var(--line); padding: 12px 20px; font-size: 13px; color: var(--muted); }
+.record .ascii .n { color: rgba(245, 245, 243, 0.2); }
+.record .ascii .f { color: rgba(245, 245, 243, 0.6); }
+.record .ascii .k { color: var(--muted); }
+.record .ascii .v { color: var(--blanc); }
+.record .ascii .s { background: var(--blanc); color: var(--noir); font-weight: 600; }
+.record .ascii .s.off { background: transparent; color: var(--blanc); }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+/* CTA heading highlight, for pages without the record. */
+.cta h2 .muted { box-decoration-break: clone; -webkit-box-decoration-break: clone; }
+.cta.found h2 .muted {
+  background: linear-gradient(var(--blanc), var(--blanc)) no-repeat left / 100% 100%; color: var(--noir);
+  animation: select 520ms var(--cut) both;
+}
+@keyframes select { from { background-size: 0% 100%; color: var(--muted); } 40% { color: var(--noir); } }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .dock { transition: none; }
+  .btn::after, header.top nav a::after { transition: none; }
+}
