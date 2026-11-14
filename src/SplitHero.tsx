@@ -44,6 +44,13 @@ function easeInOut(t: number) {
 const TOP_BAR = (
   <div className="pointer-events-none fixed inset-x-0 top-0 z-40 flex items-center justify-between px-6 py-5 text-[11px] tracking-[0.35em] text-white mix-blend-difference uppercase md:px-12">
     <span className="font-semibold">Leonardo Simplicio</span>
+    <a
+      href="./ltsdados/"
+      aria-label="Ir para LTS Dados"
+      className="pointer-events-auto absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 border border-current px-4 py-2 text-[11px] tracking-[0.35em] transition-colors hover:bg-white hover:text-black"
+    >
+      LTS DADOS
+    </a>
   </div>
 );
 
